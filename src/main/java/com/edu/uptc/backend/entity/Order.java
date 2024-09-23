@@ -22,8 +22,8 @@ public class Order {
     private Double total;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @ManyToMany
     @JoinTable(
