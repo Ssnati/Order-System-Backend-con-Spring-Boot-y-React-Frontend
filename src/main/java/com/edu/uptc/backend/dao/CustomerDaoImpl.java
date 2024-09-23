@@ -19,4 +19,9 @@ public class CustomerDaoImpl implements CustomerDao {
     public List<Customer> findAll() {
         return entityManager.createQuery("FROM Customer", Customer.class).getResultList();
     }
+
+    @Override
+    public Customer findById(Long id) {
+        return entityManager.find(Customer.class, id);
+    }
 }

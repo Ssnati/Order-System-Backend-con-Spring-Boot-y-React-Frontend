@@ -25,9 +25,10 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void save(Order order) {
+    public Order save(Order order) {
         if (order.getId() == null) entityManager.persist(order);
         else entityManager.merge(order);
+        return order;
     }
 
     @Override

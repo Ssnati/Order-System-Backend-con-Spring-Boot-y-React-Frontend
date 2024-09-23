@@ -18,4 +18,9 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> findAll() {
         return entityManager.createQuery("FROM Product", Product.class).getResultList();
     }
+
+    @Override
+    public Product findById(Long productId) {
+        return entityManager.find(Product.class, productId);
+    }
 }

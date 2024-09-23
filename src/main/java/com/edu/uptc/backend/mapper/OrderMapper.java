@@ -7,6 +7,7 @@ import com.edu.uptc.backend.entity.Customer;
 import com.edu.uptc.backend.entity.Order;
 import com.edu.uptc.backend.entity.Product;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,58 +18,38 @@ public class OrderMapper {
         if (order == null) {
             return null;
         }
-
-        OrderResponseDTO dto = new OrderResponseDTO();
-        dto.setOrderId(order.getId());
-        dto.setCustomerName(order.getCustomer() != null ? order.getCustomer().getName() : null);
-        dto.setTotal(order.getTotal());
-
-        // Asegurarte de que los productos están inicializados
-        List<ProductDTO> productDTOs = new ArrayList<>();
-        if (order.getProducts() != null) {
-            productDTOs = order.getProducts().stream()
-                    .map(product -> {
-                        ProductDTO productDTO = new ProductDTO();
-                        productDTO.setProductId(product.getId());
-                        productDTO.setProductName(product.getName());
-                        productDTO.setPrice(product.getPrice());
-                        return productDTO;
-                    })
-                    .collect(Collectors.toList());
-        }
-
-        dto.setProductDTOS(productDTOs);
-        return dto;
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+        orderResponseDTO.setOrderId(order.getId());
+        orderResponseDTO.setCreationDateTime(order.getCreationDate());
+        orderResponseDTO.setCustomerName(order.getCustomer() != null ? order.getCustomer().getName() : null);
+        orderResponseDTO.setTotal(order.getTotal());
+        orderResponseDTO.setProductDTOS(ProductMapper.toProductDtoList(order.getProducts()));
+        return orderResponseDTO;
     }
 
+    public static OrderCreationDTO toOrderCreationDTO(Order order) {
+        if (order == null) return null;
+        OrderCreationDTO orderCreationDTO = new OrderCreationDTO();
+        orderCreationDTO.setCustomerId(orderCreationDTO.getCustomerId());
+        List<Long> ids = new ArrayList<>();
+        for (Product product: order.getProducts()){
+            ids.add(product.getId());
+        }
+        orderCreationDTO.setProductIds(ids);
+        return orderCreationDTO;
+    }
 
-    public static Order toOrder(OrderCreationDTO dto) {
-        if (dto == null) {
+    public static Order toOrder(OrderCreationDTO orderCreationDTO) {
+        if (orderCreationDTO == null) {
             return null;
         }
-
         Order order = new Order();
-        // Suponiendo que tienes un método para convertir CustomerDTO a Customer
+
         Customer customer = new Customer();
-        customer.setName(dto.getCustomerDTO().getCustomerName()); // Otras propiedades si las tienes
-        customer.setEmail(dto.getCustomerDTO().getCustomerEmail());
+        customer.setId(orderCreationDTO.getCustomerId());
 
-        order.setCustomer(customer);
-
-        // Convertir ProductDTO a Product
-        List<Product> products = dto.getProductDTOS().stream()
-                .map(productDTO -> {
-                    Product product = new Product();
-                    product.setId(productDTO.getProductId());
-                    product.setName(productDTO.getProductName());
-                    product.setPrice(productDTO.getPrice());
-                    return product;
-                })
-                .collect(Collectors.toList());
-
-        order.setProducts(products);
-        order.setCreationDate(dto.getCreationDate());
-        order.setTotal(dto.getTotal());
+        Product product = new Product();
+        product.setId(orderCreationDTO.getCustomerId());
 
         return order;
     }

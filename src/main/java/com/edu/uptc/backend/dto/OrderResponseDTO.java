@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -11,7 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderResponseDTO {
     private Long orderId;
+    private LocalDateTime creationDateTime;
     private String customerName;
-    private List<ProductDTO> productDTOS;
     private Double total;
+    private List<ProductDTO> productDTOS;
 }

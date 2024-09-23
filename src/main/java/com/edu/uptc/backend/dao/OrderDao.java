@@ -11,7 +11,7 @@ public interface OrderDao {
 
     List<Order> findAll();
 
-    void save(Order order);
+    Order save(Order order);
 
     void delete(Long id);
 }
